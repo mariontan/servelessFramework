@@ -32,6 +32,34 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource : arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/integration-person-table-ivan
+
+functions:
+  hello:
+    handler: handler.hello
+  testRoute:
+    handler: handler.testRoute
+    events:
+      - http:
+          path: /
+          method: get
+resources:
+  Resources:
+    PersonTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: integration-person-table-ivan
+        AttributeDefinitions:
+          - AttributeName: person_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: person_id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+
+
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
@@ -66,9 +94,9 @@ provider:
 #    - include-me.py
 #    - include-me-dir/**
 
-functions:
-  hello:
-    handler: handler.hello
+
+#  hello:
+#    handler: handler.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -108,21 +136,7 @@ functions:
 #    Define function environment variables here
 #    environment:
 #      variable2: value2
-resources:
-  Resources:
-    PersonTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: integration-person-table-ivan
-        AttributeDefinitions:
-          - AttributeName: person_id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: person_id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:

@@ -1,4 +1,17 @@
+
+import sys
+sys.path.insert(0, 'vendor')
+from fastapi import FastAPI
 import json
+
+
+
+app = FastAPI()
+
+
+@app.get('/')
+async def testRoute():
+    return {'message': 'Hello world'}
 
 
 def hello(event, context):
@@ -21,4 +34,4 @@ def hello(event, context):
         "message": "Go Serverless v1.0! Your function executed successfully!",
         "event": event
     }
-    """
+    # """
