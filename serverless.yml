@@ -30,8 +30,9 @@ provider:
     - Effect: "Allow"
       Action:
         - "dynamodb:PutItem"
-        - "dynamodb:Get"
         - "dynamodb:Scan"
+        - "dynamodb:Get"
+        - "dynamodb:GetItem"
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource : arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/integration-person-table-ivan
