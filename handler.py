@@ -1,17 +1,17 @@
 
-# import sys
-# sys.path.insert(0, 'vendor')
-# import json
+import os
+
 from fastapi import FastAPI
 from mangum import Mangum
 
-app = FastAPI()
+stage = os.environ.get('STAGE', None)
+openapi_prefix = f"/{stage}" if stage else "/"
 
+app = FastAPI(title="MyAwesomeApp", openapi_prefix=openapi_prefix) # Here is the magic​
 
-@app.get('/')
-async def testRoute():
-    return {"message": "Hello world"}
-
+@app.get("/hello")
+def hello_world():
+    return {"message": "Hello World"}
 
 handler = Mangum(app)
 
