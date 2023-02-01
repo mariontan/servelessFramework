@@ -53,8 +53,6 @@ functions:
   #   handler: handler.hello
   testRoute:
     package:
-      include:
-        - "handler.py"
       exclude:
         - "requirements.txt"
         - "package.json"

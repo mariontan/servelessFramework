@@ -1,4 +1,4 @@
-from data_store import PersonModel
+from app.data_store import PersonModel
 
 
 class PersonRepository():

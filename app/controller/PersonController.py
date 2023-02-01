@@ -1,9 +1,9 @@
 from fastapi import HTTPException, APIRouter
 
 from .BaseController import dynamodb, table
-from data_store import PersonModel
-from repository.PersonRepository import PersonRepository
-from core.PersonService import PersonService
+from app.data_store import PersonModel
+from app.repository.PersonRepository import PersonRepository
+from app.core.PersonService import PersonService
 
 router = APIRouter()
 personRepository = PersonRepository(dynamodb, table)
@@ -23,8 +23,9 @@ async def create_person(person: PersonModel.Person):
 
 @router.get('/persons')
 async def get_persons():
-    persons = await personService.get_persons()
-    return {"persons": persons}
+    # persons = await personService.get_persons()
+    # return {"persons": persons}
+    return {'messgae':'this is the get api'}
 
 
 @router.get("/person/{person_id}")
