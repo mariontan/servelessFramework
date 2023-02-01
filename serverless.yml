@@ -19,6 +19,9 @@ app: integration-persons-lamda-ivan
 # Check out our docs for more details
 frameworkVersion: '3'
 
+package:
+  individually: true
+
 provider:
   name: aws
   runtime: python3.9
@@ -33,9 +36,21 @@ provider:
         - "dynamodb:DeleteItem"
       Resource : arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/integration-person-table-ivan
 
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer:
+      name: integration-persons-lamda-ivan-layer
+      description: integration ivan app
+      compatibleRuntimes:
+        - python3.9 
+
 functions:
-  hello:
-    handler: handler.hello
+  # hello:
+  #   handler: handler.hello
   testRoute:
     package:
       include:
@@ -54,6 +69,8 @@ functions:
       - http:
           method: any
           path: /{proxy+}
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
   
 resources:
   Resources:
@@ -162,5 +179,4 @@ resources:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-plugins:
-  - serverless-python-requirements
+
