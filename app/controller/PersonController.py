@@ -23,9 +23,8 @@ async def create_person(person: PersonModel.Person):
 
 @router.get('/persons')
 async def get_persons():
-    # persons = await personService.get_persons()
-    # return {"persons": persons}
-    return {'messgae':'this is the get api'}
+    persons = await personService.get_persons()
+    return {"persons": persons}
 
 
 @router.get("/person/{person_id}")
