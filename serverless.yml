@@ -37,11 +37,24 @@ functions:
   hello:
     handler: handler.hello
   testRoute:
-    handler: handler.testRoute
+    package:
+      include:
+        - "handler.py"
+      exclude:
+        - "requirements.txt"
+        - "package.json"
+        - "package-lock.json"
+        - ".serverless/**"
+        - ".virtualenv/**"
+        - "node_modules/**"
+        - "venv/**"
+        - "vendor/**"
+    handler: handler.handler
     events:
       - http:
-          path: /
-          method: get
+          method: any
+          path: /{proxy+}
+  
 resources:
   Resources:
     PersonTable:
@@ -148,3 +161,6 @@ resources:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+plugins:
+  - serverless-python-requirements

@@ -1,18 +1,19 @@
 
 import sys
-sys.path.insert(0, 'vendor')
-from fastapi import FastAPI
+# sys.path.insert(0, 'vendor')
 import json
-
-
+from fastapi import FastAPI
+from magnum import Magnum
 
 app = FastAPI()
 
 
 @app.get('/')
 async def testRoute():
-    return {'message': 'Hello world'}
+    return {"message": "Hello world"}
 
+
+handler = Magnum(app)
 
 def hello(event, context):
     body = {
