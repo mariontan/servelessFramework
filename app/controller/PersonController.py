@@ -4,6 +4,7 @@ from .BaseController import dynamodb, table
 from app.data_store import PersonModel
 from app.repository.PersonRepository import PersonRepository
 from app.core.PersonService import PersonService
+from app.external_gateway import AuthenticationGateway,IntegrationHubGateway
 
 router = APIRouter()
 personRepository = PersonRepository(dynamodb, table)
@@ -17,12 +18,20 @@ async def create_person(person: PersonModel.Person):
         if not person.dict().get(field):
             raise HTTPException(
                 status_code=422, detail=f"{field.capitalize()} is required")
+    token = await AuthenticationGateway.get_auth_token()
+    hub_person_resp = await IntegrationHubGateway.create_person(person,token)
     await personService.create_person(person)
-    return {"message": "Person created", "person": person}
+    return {
+        "message": "Person created", 
+        "person": person,
+        "integrationHub":hub_person_resp
+    }
 
 
 @router.get('/persons')
 async def get_persons():
+    resp = await AuthenticationGateway.get_auth_token()
+    print(resp)
     persons = await personService.get_persons()
     return {"persons": persons}
 
