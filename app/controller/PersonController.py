@@ -16,7 +16,7 @@ async def create_person(person: PersonModel.Person):
     for field in personFields:
         if not person.dict().get(field):
             raise HTTPException(
-                status_code=400, detail=f"{field.capitalize()} is required")
+                status_code=422, detail=f"{field.capitalize()} is required")
     await personService.create_person(person)
     return {"message": "Person created", "person": person}
 
@@ -30,7 +30,7 @@ async def get_persons():
 @router.get("/person/{person_id}")
 async def retrieve_person(person_id: str):
     if (not isinstance(person_id, str)):
-        raise HTTPException(status_code=402, detail='id must be a string')
+        raise HTTPException(status_code=422, detail='id must be a string')
     person = await personService.retrieve_person(person_id)
     return person
 
