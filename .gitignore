@@ -18,5 +18,6 @@ var/
 *.egg
 vendor/
 node_modules/
+*.code*
 # Serverless directories
 .serverless
