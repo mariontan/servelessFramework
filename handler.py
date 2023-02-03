@@ -7,7 +7,7 @@ from app.controller import PersonController
 stage = os.environ.get('STAGE', None)
 openapi_prefix = f"{stage}" if stage else "/"
 
-app = FastAPI(title="MyAwesomeApp", openapi_prefix=openapi_prefix) # Here is the magic​
+app = FastAPI(title="MyAwesomeApp", root_path=openapi_prefix) # Here is the magic​
 
 
 @app.get("/hello")
