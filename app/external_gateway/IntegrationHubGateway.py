@@ -37,3 +37,17 @@ async def get_person(entryId:str,token):
     }
     response = requests.get(url,headers=headers,params=params)
     return response.json()
+
+async def delete_person(entryId:str,token):
+    url = f"{base}{api}{entryId}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    params = {
+        "practiceId":"2",
+        "clientGroupId":"string"
+    }
+    response = requests.delete(url,headers=headers,params=params)
+    return response.json()
+
+

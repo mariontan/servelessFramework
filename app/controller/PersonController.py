@@ -56,5 +56,12 @@ async def update_person(person_id: str, person: PersonModel.Person):
 
 @router.delete("/person/{person_id}")
 async def delete_person(person_id: str):
+    if (not utils.is_valid_uuid(person_id)):
+        raise HTTPException(status_code=422, detail='id must be a uuid')
     await personService.delete_person(person_id)
-    return {"message": "Person deleted"}
+    token = await AuthenticationGateway.get_auth_token()
+    hub_person_response = await IntegrationHubGateway.delete_person(person_id,token)
+    return {
+        "message": f"Person with id {person_id} deleted",
+        "integrationHub":hub_person_response
+    }
