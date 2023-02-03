@@ -4,7 +4,7 @@ from .BaseController import dynamodb, table
 from app.data_store import PersonModel
 from app.repository.PersonRepository import PersonRepository
 from app.core.PersonService import PersonService
-from app.external_gateway import AuthenticationGateway,IntegrationHubGateway
+from app.external_gateway import AuthenticationGateway,IntegrationHubPersonGateway,IntegrationHubContactGateway
 from app.utils import utils
 router = APIRouter()
 personRepository = PersonRepository(dynamodb, table)
@@ -14,18 +14,15 @@ personService = PersonService(personRepository)
 @router.post("/person")
 async def create_person(person: PersonModel.Person):
     token = await AuthenticationGateway.get_auth_token()
-    hub_person_resp = await IntegrationHubGateway.create_person(person,token)
+    hub_person_resp = await IntegrationHubPersonGateway.create_person(person,token)
     setattr(person,'person_id',hub_person_resp['entryId'])
-    personFields = PersonModel.Person.__fields__.keys()
-    for field in personFields:
-        if not person.dict().get(field):
-            raise HTTPException(
-                status_code=422, detail=f"{field.capitalize()} is required")
+    hub_contact_resp = await IntegrationHubContactGateway.create_contact_detail(person,token)
+    setattr(person,'contact_detail_id',hub_contact_resp['entryId'])
     await personService.create_person(person)
     return {
-        "message": "Person created", 
         "person": person,
-        "integrationHub":hub_person_resp
+        "integrationHubPerson":hub_person_resp,
+        "integrationHubContact":hub_contact_resp
     }
 
 
@@ -41,10 +38,12 @@ async def retrieve_person(person_id: str):
         raise HTTPException(status_code=422, detail='id must be a uuid')
     person = await personService.retrieve_person(person_id)
     token = await AuthenticationGateway.get_auth_token()
-    hub_person_response = await IntegrationHubGateway.get_person(person_id,token)
+    hub_person_response = await IntegrationHubPersonGateway.get_person(person_id,token)
+    hub_contact_response = await IntegrationHubContactGateway.get_contact_detail(person['contact_detail_id'],token)
     return {
         "person":person,
-        "integrationHub":hub_person_response
+        "integrationHubPerson":hub_person_response,
+        "integrationHubContact":hub_contact_response
     }
 
 
@@ -60,7 +59,7 @@ async def delete_person(person_id: str):
         raise HTTPException(status_code=422, detail='id must be a uuid')
     await personService.delete_person(person_id)
     token = await AuthenticationGateway.get_auth_token()
-    hub_person_response = await IntegrationHubGateway.delete_person(person_id,token)
+    hub_person_response = await IntegrationHubPersonGateway.delete_person(person_id,token)
     return {
         "message": f"Person with id {person_id} deleted",
         "integrationHub":hub_person_response

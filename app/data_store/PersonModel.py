@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class Person(BaseModel):
     person_id: str
+    contact_detail_id:str
     first_name: str
     last_name: str
     preferred_name: str
