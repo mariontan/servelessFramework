@@ -5,7 +5,7 @@ from app.data_store import PersonModel
 from app.repository.PersonRepository import PersonRepository
 from app.core.PersonService import PersonService
 from app.external_gateway import AuthenticationGateway,IntegrationHubGateway
-
+from app.utils import utils
 router = APIRouter()
 personRepository = PersonRepository(dynamodb, table)
 personService = PersonService(personRepository)
@@ -37,8 +37,8 @@ async def get_persons():
 
 @router.get("/person/{person_id}")
 async def retrieve_person(person_id: str):
-    if (not isinstance(person_id, str)):
-        raise HTTPException(status_code=422, detail='id must be a string')
+    if (not utils.is_valid_uuid(person_id)):
+        raise HTTPException(status_code=422, detail='id must be a uuid')
     person = await personService.retrieve_person(person_id)
     token = await AuthenticationGateway.get_auth_token()
     hub_person_response = await IntegrationHubGateway.get_person(person_id,token)
