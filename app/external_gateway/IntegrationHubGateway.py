@@ -2,12 +2,13 @@ import requests
 from .constants import base
 from app.data_store import PersonModel
 
+api = 'hub/api/v1/people/'
+
 async def create_person(person:PersonModel.Person, token):
-    api = 'hub/api/v1/people/'
     url = f"{base}{api}"
     headers = {
-    "Authorization": f"Bearer {token}"
-}
+        "Authorization": f"Bearer {token}"
+    }
     payload={
         "firstName":person.first_name,
         "lastName":person.last_name,
@@ -23,4 +24,16 @@ async def create_person(person:PersonModel.Person, token):
         "practiceId": "2"
     }
     response = requests.post(url,headers=headers,json=payload)
+    return response.json()
+
+async def get_person(entryId:str,token):
+    url = f"{base}{api}{entryId}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    params = {
+        "practiceId":"2",
+        "clientGroupId":"string"
+    }
+    response = requests.get(url,headers=headers,params=params)
     return response.json()

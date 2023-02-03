@@ -21,7 +21,6 @@ async def create_person(person: PersonModel.Person):
         if not person.dict().get(field):
             raise HTTPException(
                 status_code=422, detail=f"{field.capitalize()} is required")
-    
     await personService.create_person(person)
     return {
         "message": "Person created", 
@@ -32,8 +31,6 @@ async def create_person(person: PersonModel.Person):
 
 @router.get('/persons')
 async def get_persons():
-    resp = await AuthenticationGateway.get_auth_token()
-    print(resp)
     persons = await personService.get_persons()
     return {"persons": persons}
 
@@ -43,7 +40,12 @@ async def retrieve_person(person_id: str):
     if (not isinstance(person_id, str)):
         raise HTTPException(status_code=422, detail='id must be a string')
     person = await personService.retrieve_person(person_id)
-    return person
+    token = await AuthenticationGateway.get_auth_token()
+    hub_person_response = await IntegrationHubGateway.get_person(person_id,token)
+    return {
+        "person":person,
+        "integrationHub":hub_person_response
+    }
 
 
 @router.put("/person/{person_id}")
