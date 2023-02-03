@@ -50,7 +50,7 @@ async def retrieve_person(person_id: str):
 
 
 @router.put("/person/{person_id}")
-async def update_person(person_id: str, person: PersonModel.Person):
+async def update_person(person_id: str, person: PersonModel.PersonPartial):
     await personService.update_person(person_id, person)
     return {"message": "Person updated"}
 
