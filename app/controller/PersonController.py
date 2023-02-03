@@ -37,6 +37,8 @@ async def retrieve_person(person_id: str):
     if (not utils.is_valid_uuid(person_id)):
         raise HTTPException(status_code=422, detail='id must be a uuid')
     person = await personService.retrieve_person(person_id)
+    if( not person):
+        raise HTTPException(status_code=404, detail='entry deleted')
     token = await AuthenticationGateway.get_auth_token()
     hub_person_response = await IntegrationHubPersonGateway.get_person(person_id,token)
     hub_contact_response = await IntegrationHubContactGateway.get_contact_detail(person['contact_detail_id'],token)
@@ -57,10 +59,13 @@ async def update_person(person_id: str, person: PersonModel.Person):
 async def delete_person(person_id: str):
     if (not utils.is_valid_uuid(person_id)):
         raise HTTPException(status_code=422, detail='id must be a uuid')
+    person = await personService.retrieve_person(person_id)
     await personService.delete_person(person_id)
     token = await AuthenticationGateway.get_auth_token()
     hub_person_response = await IntegrationHubPersonGateway.delete_person(person_id,token)
+    hub_contact_response = await IntegrationHubContactGateway.delete_contact_detail(person['contact_detail_id'],token)
     return {
         "message": f"Person with id {person_id} deleted",
-        "integrationHub":hub_person_response
+        "integrationHubPerson":hub_person_response,
+        "integrationHubContact":hub_contact_response
     }

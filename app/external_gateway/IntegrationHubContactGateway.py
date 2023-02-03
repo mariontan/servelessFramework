@@ -27,3 +27,11 @@ async def get_contact_detail(entryId:str,token):
     }
     response = requests.get(url,headers=headers)
     return response.json()
+    
+async def delete_contact_detail(entryId:str,token):
+    url = f"{base}{api}{entryId}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    response = requests.delete(url,headers=headers)
+    return response.json()
