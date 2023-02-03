@@ -23,5 +23,4 @@ async def create_person(person:PersonModel.Person, token):
         "practiceId": "2"
     }
     response = requests.post(url,headers=headers,json=payload)
-    print(response.json())
     return response.json()
