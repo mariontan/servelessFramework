@@ -13,13 +13,15 @@ personService = PersonService(personRepository)
 
 @router.post("/person")
 async def create_person(person: PersonModel.Person):
+    token = await AuthenticationGateway.get_auth_token()
+    hub_person_resp = await IntegrationHubGateway.create_person(person,token)
+    setattr(person,'person_id',hub_person_resp['entryId'])
     personFields = PersonModel.Person.__fields__.keys()
     for field in personFields:
         if not person.dict().get(field):
             raise HTTPException(
                 status_code=422, detail=f"{field.capitalize()} is required")
-    token = await AuthenticationGateway.get_auth_token()
-    hub_person_resp = await IntegrationHubGateway.create_person(person,token)
+    
     await personService.create_person(person)
     return {
         "message": "Person created", 
