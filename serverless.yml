@@ -19,29 +19,61 @@ app: integration-persons-lamda-ivan
 # Check out our docs for more details
 frameworkVersion: '3'
 
+package:
+  individually: true
+
 provider:
   name: aws
   runtime: python3.9
   region: ap-southeast-1
+  stage: ${opt:stage, "dev"}
   iamRoleStatements:
     - Effect: "Allow"
       Action:
         - "dynamodb:PutItem"
-        - "dynamodb:Get"
         - "dynamodb:Scan"
+        - "dynamodb:Get"
+        - "dynamodb:GetItem"
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
       Resource : arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/integration-person-table-ivan
 
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    layer:
+      name: integration-persons-lamda-ivan-layer
+      description: integration ivan app
+      compatibleRuntimes:
+        - python3.9 
+
 functions:
-  hello:
-    handler: handler.hello
+  # hello:
+  #   handler: handler.hello
   testRoute:
-    handler: handler.testRoute
+    package:
+      exclude:
+        - "requirements.txt"
+        - "package.json"
+        - "package-lock.json"
+        - ".serverless/**"
+        - ".virtualenv/**"
+        - "node_modules/**"
+        - "venv/**"
+        - "vendor/**"
+    handler: handler.handler
+    environment:
+      STAGE: https://h3wsuuucd3.execute-api.ap-southeast-1.amazonaws.com/dev/
     events:
       - http:
-          path: /
-          method: get
+          method: any
+          path: /{proxy+}
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+  
 resources:
   Resources:
     PersonTable:
@@ -148,3 +180,5 @@ resources:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+
+

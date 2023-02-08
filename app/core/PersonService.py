@@ -1,4 +1,4 @@
-from data_store import PersonModel
+from app.data_store import PersonModel
 
 
 class PersonService():
@@ -17,7 +17,7 @@ class PersonService():
         person = await self.personRepository.retrieve_person(person_id)
         return person
 
-    async def update_person(self, person_id: str, person: PersonModel.Person):
+    async def update_person(self, person_id: str, person: PersonModel.PersonPartial):
         await self.personRepository.update_person(person_id, person)
         return {"message": "Person updated"}
 
