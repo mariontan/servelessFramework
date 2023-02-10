@@ -22,7 +22,7 @@ class Person(BaseModel):
 
 class PersonPartial(BaseModel):
     person_id: Optional[str]
-    contactDetailId:str
+    contactDetailId:Optional[str]
     firstName: Optional[str]
     lastName: Optional[str]
     preferredName: Optional[str]

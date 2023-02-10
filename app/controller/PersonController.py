@@ -51,7 +51,9 @@ async def retrieve_person(person_id: str):
 
 @router.put("/person/{person_id}")
 async def update_person(person_id: str, person: PersonModel.PersonPartial):
+    token = await AuthenticationGateway.get_auth_token()
     await personService.update_person(person_id, person)
+    await IntegrationHubPersonGateway.update_person(person,person_id,token)
     return {"message": "Person updated"}
 
 

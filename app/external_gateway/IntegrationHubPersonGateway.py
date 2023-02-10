@@ -26,6 +26,32 @@ async def create_person(person:PersonModel.Person, token):
     response = requests.post(url,headers=headers,json=payload)
     return response.json()
 
+async def update_person(person:PersonModel.PersonPartial,entryId:str, token):
+    url = f"{base}{api}{entryId}"
+    headers = {
+        "Authorization": f"Bearer {token}"
+    }
+    payload={
+        "userGroup": "Client Group",
+        "clientGroupId":"string",
+        "userRoles": [
+            "primary_client"
+        ],
+        "practiceId": "2"
+    }
+    person_dict = person.dict()
+    person_dict = {k: v for k, v in person_dict.items() if v is not None}
+    updated_values = {f"{key}": value for key, value in person_dict.items()}
+    print(type(updated_values))
+    print(type(payload))
+    print(payload.update(updated_values))
+    print(payload)
+    # response = requests.post(url,headers=headers,json=payload)
+    # return response.json()
+
+
+
+
 async def get_person(entryId:str,token):
     url = f"{base}{api}{entryId}"
     headers = {
