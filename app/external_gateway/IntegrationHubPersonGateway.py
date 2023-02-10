@@ -10,17 +10,17 @@ async def create_person(person:PersonModel.Person, token):
         "Authorization": f"Bearer {token}"
     }
     payload={
-        "firstName":person.first_name,
-        "lastName":person.last_name,
+        "firstName":person.firstName,
+        "lastName":person.lastName,
         "userGroup": "Client Group",
         "clientGroupId":"string",
         "userRoles": [
             "primary_client"
         ],
-        "preferredName":person.preferred_name,
-        "dateOfBirth":person.dob,
+        "preferredName":person.preferredName,
+        "dateOfBirth":person.dateOfBirth,
         "gender":person.gender,
-        "maritalStatus":person.marital_status,
+        "maritalStatus":person.maritalStatus,
         "practiceId": "2"
     }
     response = requests.post(url,headers=headers,json=payload)

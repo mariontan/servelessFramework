@@ -10,7 +10,7 @@ def client():
 def test_create_person(client):
     person = {
     "person_id":"5",
-    "contact_detail_id":"5",
+    "contactDetailId":"5",
     "first_name":"First",
     "last_name":"Bean",
     "preferred_name":"Green T",
