@@ -1,4 +1,4 @@
-from app.data_store import PersonModel
+from ..data_store import PersonModel
 
 
 class PersonService():
