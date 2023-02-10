@@ -1,4 +1,5 @@
 import requests
+from fastapi import HTTPException
 from .constants import base
 from ..data_store import PersonModel
 
@@ -24,6 +25,8 @@ async def create_person(person:PersonModel.Person, token):
         "practiceId": "2"
     }
     response = requests.post(url,headers=headers,json=payload)
+    if(response.status_code!=200):
+         raise HTTPException(status_code=response.status_code, detail="Error:{}".format(response.json()))
     return response.json()
 
 async def update_person(person:PersonModel.PersonPartial,entryId:str, token):
@@ -42,12 +45,11 @@ async def update_person(person:PersonModel.PersonPartial,entryId:str, token):
     person_dict = person.dict()
     person_dict = {k: v for k, v in person_dict.items() if v is not None}
     updated_values = {f"{key}": value for key, value in person_dict.items()}
-    print(type(updated_values))
-    print(type(payload))
-    print(payload.update(updated_values))
-    print(payload)
-    # response = requests.post(url,headers=headers,json=payload)
-    # return response.json()
+    payload.update(updated_values)
+    response = requests.patch(url,headers=headers,json=payload)
+    if(response.status_code!=200):
+         raise HTTPException(status_code=response.status_code, detail="Error:{}".format(response.json()))
+    return response.json()
 
 
 
@@ -62,6 +64,8 @@ async def get_person(entryId:str,token):
         "clientGroupId":"string"
     }
     response = requests.get(url,headers=headers,params=params)
+    if(response.status_code!=200):
+         raise HTTPException(status_code=response.status_code, detail="Error:{}".format(response.json()))
     return response.json()
 
 async def delete_person(entryId:str,token):
@@ -74,6 +78,8 @@ async def delete_person(entryId:str,token):
         "clientGroupId":"string"
     }
     response = requests.delete(url,headers=headers,params=params)
+    if(response.status_code!=200):
+         raise HTTPException(status_code=response.status_code, detail="Error:{}".format(response.json()))
     return response.json()
 
 
