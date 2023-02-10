@@ -9,17 +9,26 @@ def client():
 
 def test_create_person(client):
     person = {
-        "first_name": "test",
-        "last_name": "test",
-        "email": "test@test.com",
-        "phone": "123456789",
-    }
+    "person_id":"5",
+    "contact_detail_id":"5",
+    "first_name":"First",
+    "last_name":"Bean",
+    "preferred_name":"Green T",
+    "dob":"2023-02-02",
+    "gender":"Male",
+    "marital_status":"Single",
+    "mobile_number":"09335556677",
+    "home_email":"Beanemail",
+    "office_email":"officeemail",
+    "home_address":"hi address",
+    "office_address":"office"
+}
     resp = client.post("/person", json=person)
     assert resp.status_code == 200
     assert resp.json()["person"]["first_name"] == person["first_name"]
     assert resp.json()["person"]["last_name"] == person["last_name"]
-    assert resp.json()["person"]["email"] == person["email"]
-    assert resp.json()["person"]["phone"] == person["phone"]
+    assert resp.json()["person"]["home_email"] == person["home_email"]
+    assert resp.json()["person"]["mobile_number"] == person["mobile_number"]
 
 def test_get_persons(client):
     resp = client.get("/persons")
@@ -51,4 +60,5 @@ def test_delete_person(client):
 def test_delete_person_invalid_uuid(client):
     person_id = "invalid_uuid"
     resp = client.delete(f"/person/{person_id}")
+    print('!!!!!!!!',resp.status_code)
     assert resp.status_code == 422
