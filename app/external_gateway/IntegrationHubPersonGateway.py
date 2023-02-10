@@ -1,6 +1,6 @@
 import requests
 from .constants import base
-from app.data_store import PersonModel
+from ..data_store import PersonModel
 
 api = 'hub/api/v1/people/'
 

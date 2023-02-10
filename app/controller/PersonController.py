@@ -1,11 +1,11 @@
 from fastapi import HTTPException, APIRouter
 
 from .BaseController import dynamodb, table
-from app.data_store import PersonModel
-from app.repository.PersonRepository import PersonRepository
-from app.core.PersonService import PersonService
-from app.external_gateway import AuthenticationGateway,IntegrationHubPersonGateway,IntegrationHubContactGateway
-from app.utils import utils
+from ..data_store import PersonModel
+from ..repository.PersonRepository import PersonRepository
+from ..core.PersonService import PersonService
+from ..external_gateway import AuthenticationGateway,IntegrationHubPersonGateway,IntegrationHubContactGateway
+from ..utils import utils
 router = APIRouter()
 personRepository = PersonRepository(dynamodb, table)
 personService = PersonService(personRepository)
