@@ -11,24 +11,24 @@ def test_create_person(client):
     person = {
     "person_id":"5",
     "contactDetailId":"5",
-    "first_name":"First",
-    "last_name":"Bean",
-    "preferred_name":"Green T",
-    "dob":"2023-02-02",
+    "firstName":"First",
+    "lastName":"Bean",
+    "preferredName":"Green T",
+    "dateOfBirth":"2023-02-02",
     "gender":"Male",
-    "marital_status":"Single",
-    "mobile_number":"09335556677",
-    "home_email":"Beanemail",
-    "office_email":"officeemail",
-    "home_address":"hi address",
-    "office_address":"office"
+    "maritalStatus":"Single",
+    "mobileNumber":"09335556677",
+    "homeEmail":"Beanemail",
+    "officeEmail":"officeemail",
+    "homeAddress":"hi address",
+    "officeAddress":"office"
 }
     resp = client.post("/person", json=person)
     assert resp.status_code == 200
-    assert resp.json()["person"]["first_name"] == person["first_name"]
-    assert resp.json()["person"]["last_name"] == person["last_name"]
-    assert resp.json()["person"]["home_email"] == person["home_email"]
-    assert resp.json()["person"]["mobile_number"] == person["mobile_number"]
+    assert resp.json()["person"]["firstName"] == person["firstName"]
+    assert resp.json()["person"]["lastName"] == person["lastName"]
+    assert resp.json()["person"]["homeEmail"] == person["homeEmail"]
+    assert resp.json()["person"]["mobileNumber"] == person["mobileNumber"]
 
 def test_get_persons(client):
     resp = client.get("/persons")
@@ -43,8 +43,8 @@ def test_retrieve_person(client):
 def test_update_person(client):
     person_id = str(uuid.uuid4())
     person = {
-        "first_name": "test",
-        "last_name": "test",
+        "firstName": "test",
+        "lastName": "test",
         "email": "test@test.com",
         "phone": "123456789",
     }
