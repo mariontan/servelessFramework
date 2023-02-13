@@ -60,5 +60,4 @@ def test_delete_person(client):
 def test_delete_person_invalid_uuid(client):
     person_id = "invalid_uuid"
     resp = client.delete(f"/person/{person_id}")
-    print('!!!!!!!!',resp.status_code)
     assert resp.status_code == 422
