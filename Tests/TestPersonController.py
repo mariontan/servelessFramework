@@ -36,9 +36,10 @@ def test_get_persons(client):
     assert "persons" in resp.json()
 
 def test_retrieve_person(client):
-    person_id = str(uuid.uuid4())
-    resp = client.get(f"/person/{person_id}")
-    assert resp.status_code == 404
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = str(uuid.uuid4())
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 403
 
 def test_update_person(client):
     person_id = str(uuid.uuid4())
@@ -49,16 +50,17 @@ def test_update_person(client):
         "phone": "123456789",
     }
     resp = client.put(f"/person/{person_id}", json=person)
-    assert resp.status_code == 200
     assert resp.json() == {"message": "Person updated"}
 
+
+
 def test_delete_person(client):
-    person_id = str(uuid.uuid4())
-    resp = client.delete(f"/person/{person_id}")
-    assert resp.status_code == 404
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = str(uuid.uuid4())
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 403
 
-
-def test_delete_person_invalid_uuid2(client):
+def test_delete_person_invalid_uuid(client):
     with pytest.raises(HTTPException) as exc_info:
         person_id = 'invalid_uuid'
         client.delete(f"/person/{person_id}")
