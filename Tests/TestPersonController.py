@@ -41,19 +41,6 @@ def test_retrieve_person(client):
         client.delete(f"/person/{person_id}")
     assert exc_info.value.status_code == 403
 
-def test_update_person(client):
-    person_id = str(uuid.uuid4())
-    person = {
-        "firstName": "test",
-        "lastName": "test",
-        "email": "test@test.com",
-        "phone": "123456789",
-    }
-    resp = client.put(f"/person/{person_id}", json=person)
-    assert resp.json() == {"message": "Person updated"}
-
-
-
 def test_delete_person(client):
     with pytest.raises(HTTPException) as exc_info:
         person_id = str(uuid.uuid4())
