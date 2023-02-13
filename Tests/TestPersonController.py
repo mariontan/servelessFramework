@@ -57,7 +57,10 @@ def test_delete_person(client):
     resp = client.delete(f"/person/{person_id}")
     assert resp.status_code == 404
 
-def test_delete_person_invalid_uuid(client):
-    person_id = "invalid_uuid"
-    resp = client.delete(f"/person/{person_id}")
-    assert resp.status_code == 422
+
+def test_delete_person_invalid_uuid2(client):
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = 'invalid_uuid'
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 422
+    assert exc_info.value.detail == 'id must be a uuid'
