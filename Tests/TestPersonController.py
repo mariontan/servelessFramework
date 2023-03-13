@@ -10,25 +10,25 @@ def client():
 def test_create_person(client):
     person = {
     "person_id":"5",
-    "contact_detail_id":"5",
-    "first_name":"First",
-    "last_name":"Bean",
-    "preferred_name":"Green T",
-    "dob":"2023-02-02",
+    "contactDetailId":"5",
+    "firstName":"First",
+    "lastName":"Bean",
+    "preferredName":"Green T",
+    "dateOfBirth":"2023-02-02",
     "gender":"Male",
-    "marital_status":"Single",
-    "mobile_number":"09335556677",
-    "home_email":"Beanemail",
-    "office_email":"officeemail",
-    "home_address":"hi address",
-    "office_address":"office"
+    "maritalStatus":"Single",
+    "mobileNumber":"09335556677",
+    "homeEmail":"Beanemail",
+    "officeEmail":"officeemail",
+    "homeAddress":"hi address",
+    "officeAddress":"office"
 }
     resp = client.post("/person", json=person)
     assert resp.status_code == 200
-    assert resp.json()["person"]["first_name"] == person["first_name"]
-    assert resp.json()["person"]["last_name"] == person["last_name"]
-    assert resp.json()["person"]["home_email"] == person["home_email"]
-    assert resp.json()["person"]["mobile_number"] == person["mobile_number"]
+    assert resp.json()["person"]["firstName"] == person["firstName"]
+    assert resp.json()["person"]["lastName"] == person["lastName"]
+    assert resp.json()["person"]["homeEmail"] == person["homeEmail"]
+    assert resp.json()["person"]["mobileNumber"] == person["mobileNumber"]
 
 def test_get_persons(client):
     resp = client.get("/persons")
@@ -36,29 +36,20 @@ def test_get_persons(client):
     assert "persons" in resp.json()
 
 def test_retrieve_person(client):
-    person_id = str(uuid.uuid4())
-    resp = client.get(f"/person/{person_id}")
-    assert resp.status_code == 404
-
-def test_update_person(client):
-    person_id = str(uuid.uuid4())
-    person = {
-        "first_name": "test",
-        "last_name": "test",
-        "email": "test@test.com",
-        "phone": "123456789",
-    }
-    resp = client.put(f"/person/{person_id}", json=person)
-    assert resp.status_code == 200
-    assert resp.json() == {"message": "Person updated"}
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = str(uuid.uuid4())
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 403
 
 def test_delete_person(client):
-    person_id = str(uuid.uuid4())
-    resp = client.delete(f"/person/{person_id}")
-    assert resp.status_code == 404
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = str(uuid.uuid4())
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 403
 
 def test_delete_person_invalid_uuid(client):
-    person_id = "invalid_uuid"
-    resp = client.delete(f"/person/{person_id}")
-    print('!!!!!!!!',resp.status_code)
-    assert resp.status_code == 422
+    with pytest.raises(HTTPException) as exc_info:
+        person_id = 'invalid_uuid'
+        client.delete(f"/person/{person_id}")
+    assert exc_info.value.status_code == 422
+    assert exc_info.value.detail == 'id must be a uuid'

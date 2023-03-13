@@ -17,7 +17,7 @@ async def create_person(person: PersonModel.Person):
     hub_person_resp = await IntegrationHubPersonGateway.create_person(person,token)
     setattr(person,'person_id',hub_person_resp['entryId'])
     hub_contact_resp = await IntegrationHubContactGateway.create_contact_detail(person,token)
-    setattr(person,'contact_detail_id',hub_contact_resp['entryId'])
+    setattr(person,'contactDetailId',hub_contact_resp['entryId'])
     await personService.create_person(person)
     return {
         "person": person,
@@ -41,7 +41,7 @@ async def retrieve_person(person_id: str):
         raise HTTPException(status_code=404, detail='entry deleted')
     token = await AuthenticationGateway.get_auth_token()
     hub_person_response = await IntegrationHubPersonGateway.get_person(person_id,token)
-    hub_contact_response = await IntegrationHubContactGateway.get_contact_detail(person['contact_detail_id'],token)
+    hub_contact_response = await IntegrationHubContactGateway.get_contact_detail(person['contactDetailId'],token)
     return {
         "person":person,
         "integrationHubPerson":hub_person_response,
@@ -51,7 +51,9 @@ async def retrieve_person(person_id: str):
 
 @router.put("/person/{person_id}")
 async def update_person(person_id: str, person: PersonModel.PersonPartial):
+    token = await AuthenticationGateway.get_auth_token()
     await personService.update_person(person_id, person)
+    await IntegrationHubPersonGateway.update_person(person,person_id,token)
     return {"message": "Person updated"}
 
 
@@ -63,7 +65,7 @@ async def delete_person(person_id: str):
     await personService.delete_person(person_id)
     token = await AuthenticationGateway.get_auth_token()
     hub_person_response = await IntegrationHubPersonGateway.delete_person(person_id,token)
-    hub_contact_response = await IntegrationHubContactGateway.delete_contact_detail(person['contact_detail_id'],token)
+    hub_contact_response = await IntegrationHubContactGateway.delete_contact_detail(person['contactDetailId'],token)
     return {
         "message": f"Person with id {person_id} deleted",
         "integrationHubPerson":hub_person_response,

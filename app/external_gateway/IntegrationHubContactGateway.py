@@ -13,7 +13,7 @@ async def create_contact_detail(person: PersonModel.Person,token):
         "ownerId": person.person_id,
         "ownerType": "People",
         "contactType": "Mobile",
-        "detail": person.mobile_number,
+        "detail": person.mobileNumber,
         "isPreferred": True,
         "xplanIndex": "string"
     }
